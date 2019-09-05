@@ -2,62 +2,43 @@ from collections import deque
 from sys import stdin
 
 
-def pile_cubes(sides):
-    stack = []
+class CubePile:
+    def __init__(self, cubes, length=None):
+        maxlen = len(cubes) if not length else length
+        self.deque = deque(cubes, maxlen=maxlen)
 
-    while(sides):
-        try:
-            first, *sides, last = sides
-            cubes = sorted([first, last], reverse=True)
-        except ValueError:
-            cubes = sides
-
-        if len(stack) == 0 or any(stack[-1] >= c for c in cubes):
-            stack += cubes
-        else:
-            return False
-
-    return True
-
-
-def get_cubes(input_cubes):
-    cubes = deque(input_cubes)
-    last_cube = None
-
-    while cubes:
-        right = cubes.pop()
-
-        if len(cubes) > 0:
-            left = cubes.popleft()
-
-            if right >= left:
-                biggest_cube = right
-                cubes.appendleft(left)
+    def __iter__(self):
+        while self.deque:
+            if self.deque[0] >= self.deque[-1]:
+                yield self.deque.popleft()
             else:
-                biggest_cube = left
-                cubes.append(right)
-        else:
-            biggest_cube = right
+                yield self.deque.pop()
 
-        if last_cube is None or biggest_cube <= last_cube:
-            last_cube = biggest_cube
-        else:
-            last_cube = None
+    def can_be_piled(self):
+        cubes = iter(self)
+        last = next(cubes)
 
-        yield last_cube
+        for cube in cubes:
+            if last < cube:
+                return False
+
+            last = cube
+
+        return True
 
 
 def piling_up():
-    _, *test_cases = stdin.readlines()
+    _, *tests = stdin.readlines()
 
-    for n_sides in test_cases[1::2]:
-        sides = [int(s) for s in n_sides.split()]
-        for cube in get_cubes(sides):
-            if cube is None:
-                print('No')
-                break
-        else:
+    for n_cubes, n_sides in zip(tests[0::2], tests[1::2]):
+        sides = (int(s) for s in n_sides.split())
+        cubes_qty = int(n_cubes)
+        pile = CubePile(sides, length=cubes_qty)
+
+        if pile.can_be_piled():
             print('Yes')
+        else:
+            print('No')
 
 
 if __name__ == '__main__':
