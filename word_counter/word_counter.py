@@ -1,19 +1,15 @@
-from collections import defaultdict
+from collections import Counter
 from sys import stdin
 
 
 def word_counter(words):
-    counter = defaultdict(int)
+    counter = Counter(words)
 
-    for word in words:
-        word = word.strip()
-        counter[word] += 1
-
-    return counter
+    return len(counter), counter.values()
 
 
 if __name__ == '__main__':
     _, *words = stdin.readlines()
-    count = word_counter(words)
-    print(len(count))
-    print(*count.values())
+    total, ns = word_counter(w.strip() for w in words)
+    print(total)
+    print(*ns)
