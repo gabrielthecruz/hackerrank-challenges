@@ -3,7 +3,7 @@ from sys import stdin
 
 
 def company_logo():
-    company_name = stdin.readline().replace('\n', '')
+    company_name = stdin.readline().strip()
     chars = Counter(sorted(company_name))
 
     for char in chars.most_common(3):

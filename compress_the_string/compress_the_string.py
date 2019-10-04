@@ -10,5 +10,5 @@ def compress_str(string):
 
 
 if __name__ == '__main__':
-    string = stdin.read().replace('\n', '')
+    string = stdin.read().strip()
     compress_str(string)

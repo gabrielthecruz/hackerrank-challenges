@@ -6,7 +6,7 @@ def word_counter(words):
     counter = defaultdict(int)
 
     for word in words:
-        word = word.replace('\n', '')
+        word = word.strip()
         counter[word] += 1
 
     return counter
