@@ -5,22 +5,14 @@ from sys import stdin
 def main():
     _, *operations = stdin.readlines()
     d = deque()
-    methods = {
-        'append': d.append,
-        'pop': d.pop,
-        'popleft': d.popleft,
-        'appendleft': d.appendleft
-    }
+    methods = {key: getattr(d, key) for key in ['append', 'pop', 'popleft',
+                                                'appendleft']}
 
     for operation in operations:
-        name, *params = operation.replace('\n', '').split()
+        name, *params = operation.strip().split()
+        methods[name](*params)
 
-        if len(params) > 0:
-            methods[name](*params)
-        else:
-            methods[name]()
-
-    print(*list(d))
+    print(*d)
 
 
 if __name__ == '__main__':
